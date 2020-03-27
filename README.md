@@ -1,4 +1,4 @@
-# Thermal camera
+# Skin Temperature Scanner
 
 ## Abstract
 
