@@ -1,4 +1,4 @@
-# Thermal camera
+# Skin Temperature Scanner
 
 ## Abstract
 
@@ -50,13 +50,13 @@ sudo apt install libavutil-dev libavcodec-dev libavformat-dev libsdl2-dev libsdl
 
 ```shell script
 git clone <thermalcam>
-cd thermalcam
+cd skin-temperature-scanner
 ./bin/install_dependencies.sh
 mkdir build
 cd build
 cmake ..
 make
-./thermalcam
+./ThermalCamera
 ``` 
 
 ## References
