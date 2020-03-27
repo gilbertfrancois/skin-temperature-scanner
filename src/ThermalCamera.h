@@ -46,10 +46,10 @@ private:
     TTF_Font *font64;
 
     // === Settings ===
-    const float MIN_TEMPERATURE = 5.0f;
-    const float MAX_TEMPERATURE = 50.0f;
     const float MIN_MEASURE_RANGE = 31.0f;
     const float MAX_MEASURE_RANGE = 40.0f;
+    const float MIN_TEMPERATURE = MIN_MEASURE_RANGE - 10.0f;
+    const float MAX_TEMPERATURE = MAX_MEASURE_RANGE - 3.0f;
     const float MEASURE_AREA_FRACTION = 0.10f;
     const int MEASURE_AREA_THRESHOLD = static_cast<int>(round(SENSOR_W * SENSOR_H * MEASURE_AREA_FRACTION));
     // Emissivity value for human skin
@@ -59,7 +59,7 @@ private:
     // Screen rotation
     const int rotation = 0;
     // Font path
-    std::string FONT_PATH = "/usr/share/fonts/truetype/piboto/Piboto-Regular.ttf";
+    const std::string FONT_PATH = "/usr/share/fonts/truetype/piboto/Piboto-Regular.ttf";
     // Measure timer
     const float TIMER_THRESHOLD_SECONDS = .6f;
     const size_t TIMER_THRESHOLD_FRAMES = static_cast<int>(round(TIMER_THRESHOLD_SECONDS * FPS));
@@ -91,6 +91,7 @@ private:
     int offset_left;
     int offset_top;
     int aspect_scale;
+    size_t frame_no;
     SDL_Rect rect_preserve_aspect;
     SDL_Rect rect_fullscreen;
     bool preserve_aspect = true;
@@ -116,6 +117,8 @@ private:
     void render_temp_labels() const;
 
     void render_animation();
+
+    void screenshot();
 };
 
 

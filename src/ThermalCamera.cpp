@@ -2,21 +2,20 @@
 // Created by G.F. Duivesteijn on 23.03.20.
 //
 #include <chrono>
-#include <thread>
 #include <cmath>
-#include <vector>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
 #include "ThermalCamera.h"
 #include "constants.h"
+#include "colormap.h"
 
 ThermalCamera::ThermalCamera() {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "=== ThermalCamera, Copyright 2020 Ava-X ===");
     char *base_path = SDL_GetBasePath();
     if (base_path) {
         resource_path = std::string(base_path) + "/resources";
-//        resource_path = "../resources";
+        resource_path = "../resources";
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Resource path: %s\n", resource_path.c_str());
     }
     init_sdl();
@@ -29,6 +28,7 @@ ThermalCamera::ThermalCamera() {
     mean_val_lpf = 0.0f;
     timer_is_animating = 0;
     animation_frame_nr = 0;
+    frame_no = 0;
 }
 
 ThermalCamera::~ThermalCamera() {
@@ -89,13 +89,13 @@ void ThermalCamera::init_sdl() {
         animation.push_back(_frame);
     }
     // Hide cursor
-    int SDL_ShowCursor(SDL_DISABLE);
+    SDL_ShowCursor(SDL_DISABLE);
     // Init fonts
     TTF_Init();
     font64 = TTF_OpenFont(FONT_PATH.c_str(), 64);
     font32 = TTF_OpenFont(FONT_PATH.c_str(), 36);
     if (font64 == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to load font %s", FONT_PATH, TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to load font %s", FONT_PATH.c_str(), TTF_GetError());
         clean();
         exit(EXIT_FAILURE);
     }
@@ -171,6 +171,7 @@ void ThermalCamera::clean() {
 }
 
 void ThermalCamera::update() {
+    frame_no++;
     auto start = std::chrono::system_clock::now();
     MLX90640_GetFrameData(MLX_I2C_ADDR, frame);
 
@@ -250,12 +251,9 @@ void ThermalCamera::render() {
         render_temp_labels();
     } else {
         render_animation();
-//        SDL_Point origin = {0, 0};
-//        SDL_Color text_color = {255, 255, 255, 255};
-//        std::string label = "Move closer...";
-//        render_text(label, text_color, origin, 3, font64);
     }
     SDL_RenderPresent(renderer);
+//    screenshot();
 }
 
 void ThermalCamera::render_temp_labels() const {
@@ -265,10 +263,10 @@ void ThermalCamera::render_temp_labels() const {
     std::string label = "Skin temperature:";
     render_text(label, text_color, origin, 0, font32);
     origin = {0, 0};
-    if (mean_val_lpf <= 31.8) {
+    if (mean_val_lpf <= 31.0) {
         label = "Low";
     }
-    else if (mean_val_lpf > 31.8 && mean_val_lpf <= 34.2) {
+    else if (mean_val_lpf > 31.0 && mean_val_lpf <= 34.2) {
         label = "Normal";
     }
     else if (mean_val_lpf > 34.2 && mean_val_lpf <= 35.0) {
@@ -369,35 +367,15 @@ void ThermalCamera::handle_events() {
 }
 
 void ThermalCamera::colormap(const int x, const int y, float v, float vmin, float vmax) {
-    // Heatmap code borrowed from: http://www.andrewnoske.com/wiki/Code_-_heatmaps_and_color_gradients
-    const int NUM_COLORS = 7;
-    static float color[NUM_COLORS][3] = {{0, 0, 0},
-                                         {0, 0, 1},
-                                         {0, 1, 0},
-                                         {1, 1, 0},
-                                         {1, 0, 0},
-                                         {1, 0, 1},
-                                         {1, 1, 1}};
-    int idx1, idx2;
-    float fractBetween = 0;
+
+    // Normalize v
     v = (v - vmin) / (vmax - vmin);
-    if (v < 0) {
-        idx1 = 0;
-        idx2 = 0;
-    } else if (v >= 1) {
-        idx1 = NUM_COLORS - 1;
-        idx2 = NUM_COLORS - 1;
-    } else {
-        v *= (NUM_COLORS - 1);
-        idx1 = floor(v);
-        idx2 = idx1 + 1;
-        fractBetween = v - float(idx1);
-    }
-    const auto ir = static_cast<uint8_t>((((color[idx2][0] - color[idx1][0]) * fractBetween) + color[idx1][0]) * 255.0);
-    const auto ig = static_cast<uint8_t>((((color[idx2][1] - color[idx1][1]) * fractBetween) + color[idx1][1]) * 255.0);
-    const auto ib = static_cast<uint8_t>((((color[idx2][2] - color[idx1][2]) * fractBetween) + color[idx1][2]) * 255.0);
+    auto color_index = static_cast<size_t>(round(255 * v));
+    color_index = color_index > 255 ? 255 : color_index;
+    color_index = color_index < 0 ? 0 : color_index;
     const uint offset = (y * SENSOR_W + x);
-    pixels[offset] = ib << 16u | ig << 8u | ir << 0u;
+    ColorMap cm = get_colormap_magma();
+    pixels[offset] = cm.b.at(color_index) << 16u | cm.g.at(color_index) << 8u | cm.r.at(color_index);
 }
 
 void ThermalCamera::render_animation() {
@@ -413,4 +391,14 @@ void ThermalCamera::render_animation() {
     SDL_Rect animation_rect = {0, output_height, display_width, display_height - output_height};
     SDL_RenderCopy(renderer, animation.at(animation_frame_nr), nullptr, &animation_rect);
 
+}
+
+void ThermalCamera::screenshot() {
+    SDL_Surface *sshot = SDL_CreateRGBSurface(0, display_width, display_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+    SDL_RenderReadPixels(renderer, nullptr, SDL_PIXELFORMAT_ARGB8888, sshot->pixels, sshot->pitch);
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(5) << frame_no;
+    auto filename = "/home/pi/Videos/" + ss.str() + ".bmp";
+    SDL_SaveBMP(sshot, filename.c_str());
+    SDL_FreeSurface(sshot);
 }

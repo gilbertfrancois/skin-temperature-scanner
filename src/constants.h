@@ -10,7 +10,7 @@
 #define SENSOR_W 24
 #define SENSOR_H 32
 // Valid frame rates are 1, 2, 4, 8, 16, 32 and 64
-#define FPS 32
+#define FPS 16
 // The i2c baudrate is set to 1mhz to support these
 #define FRAME_TIME_MICROS (1000000/FPS)
 // Despite the framerate being ostensibly FPS hz

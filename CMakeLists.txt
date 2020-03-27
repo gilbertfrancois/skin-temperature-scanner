@@ -33,5 +33,5 @@ target_link_libraries(mlx90640_api)
 # ============================================================================
 # ------------------------------ Build application ---------------------------
 
-add_executable(ThermalCamera src/ThermalCamera.cpp src/main.cpp src/constants.h)
+add_executable(ThermalCamera src/ThermalCamera.cpp src/main.cpp src/constants.h src/colormap.h)
 target_link_libraries(ThermalCamera mlx90640_api PkgConfig::SDL2 PkgConfig::SDL2_ttf)
