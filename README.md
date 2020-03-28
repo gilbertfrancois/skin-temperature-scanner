@@ -7,7 +7,9 @@ thermal camera connected to a Raspberry Pi computer. Packaged with
 a battery and small screen, you can create a portable, handheld
 device to have a quick measure if someone has fever or not.
 
-<img alt="preview" src="resources/doc/preview.gif" height=400 width=240>
+|animation   | device  |
+|---|---|
+|<img alt="preview" src="resources/doc/preview.gif" height=400 width=240> | <img alt="box" src="resources/doc/01.jpg" height=400 width=533>|
 
 ## Part list
 
