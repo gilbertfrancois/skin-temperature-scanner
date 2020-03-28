@@ -29,25 +29,39 @@ The company Pimoroni has made a breakout board
 [breakout board](https://shop.pimoroni.com/products/mlx90640-thermal-camera-breakout?variant=12536948654163) around this
 sensor, for easy integration with a Raspberry Pi.
 
-## Waveshare 4.3" HDMI display
-
-Open and modify the /boot/config.txt file, which located at root directory (BOOT) of SD card, append these lines to config.txt file
-```shell script
-max_usb_current=1
-hdmi_group=2
-hdmi_mode=87
-hdmi_cvt 800 480 60 6 0 0 0 
-# Rotate the screen to portrait mode
-display_rotate=3
-```
-Note that for the setting `display_rotate=3`, the GL driver must be set to _Legacy_ in the `raspi-config` tool.
-
 ## Research
 
 | Setting                        | Value                 | Reference |
 | ------------------------------ | --------------------- | --------- |
 | Emisitivity of human skin      | 0.99                  | [1]       |
 | Average human skin temperature | 32-34 degrees Celsius | [2]       |
+
+
+## Setup the Raspberry Pi
+
+The software is made and tested on Raspbian (Buster). Open `/boot/config.txt` and make the following changes:
+
+```
+## Display settings
+max_usb_current=1
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt 800 480 60 6 0 0 0 
+# Rotate the screen to portrait mode
+display_rotate=3
+
+## Settings for the thermal sensor
+dtparam=i2c_arm=on
+dtparam=spi=on
+# Add support for FPS > 16
+dtparam=i2c1_baudrate=1000000
+```
+
+If you don't want to make these settings by hand, you can also copy the `resources/boot/config.txt` from this project:
+
+```shell script
+cp ./resources/boot/config.txt /boot/config.txt
+```
 
 ## Dependencies
 
