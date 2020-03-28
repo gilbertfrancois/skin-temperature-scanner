@@ -191,7 +191,7 @@ void ThermalCamera::update() {
     MLX90640_BadPixelsCorrection((&mlx90640)->outlierPixels, mlx90640To, 1, &mlx90640);
 
     // Scan the sensor and compute the mean skin temperature, assuming that skin temperature is between
-    // MIN_TEMPERATURE and MAX_TEMPERATURE.
+    // MIN_MEASURE_RANGE and MAX_MEASURE_RANGE.
     float sum_temp = 0.0f;
     int n_samples = 0;
     for (int y = 0; y < SENSOR_W; y++) {
