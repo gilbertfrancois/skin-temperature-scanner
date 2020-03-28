@@ -15,7 +15,6 @@ limitations under the License.
 */
 #include <chrono>
 #include <cmath>
-#include <sstream>
 #include <iomanip>
 #include <iostream>
 #include "ThermalCamera.h"
@@ -26,13 +25,11 @@ ThermalCamera::ThermalCamera() {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "=== ThermalCamera, Copyright 2020 Ava-X ===");
     char *base_path = SDL_GetBasePath();
     if (base_path) {
-        resource_path = std::string(base_path) + "/resources";
-        resource_path = "../resources";
+        resource_path = std::string(base_path) + "../resources";
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Resource path: %s\n", resource_path.c_str());
     }
     init_sdl();
     init_sensor();
-    // Load slider background image
     is_running = true;
     is_measuring = false;
     is_measuring_lpf = is_measuring;
@@ -89,8 +86,8 @@ void ThermalCamera::init_sdl() {
     slider = SDL_CreateTextureFromSurface(renderer, image);
     SDL_FreeSurface(image);
     // Load animation
-    for (int i=0; i<6; i++) {
-        std::string file_path = resource_path + "/images/anim" + std::to_string(i+1) + ".bmp";
+    for (int i = 0; i < 6; i++) {
+        std::string file_path = resource_path + "/images/anim" + std::to_string(i + 1) + ".bmp";
         SDL_Surface *_image = SDL_LoadBMP(file_path.c_str());
         if (_image == nullptr) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP() Failed: %s\n", SDL_GetError());
@@ -195,7 +192,6 @@ void ThermalCamera::update() {
 
     // Scan the sensor and compute the mean skin temperature, assuming that skin temperature is between
     // MIN_TEMPERATURE and MAX_TEMPERATURE.
-    float max_val = -1.0f;
     float sum_val = 0.0f;
     int n_val = 0;
     for (int y = 0; y < SENSOR_W; y++) {
@@ -276,14 +272,11 @@ void ThermalCamera::render_temp_labels() const {
     origin = {0, 0};
     if (mean_val_lpf <= 31.0) {
         label = "Low";
-    }
-    else if (mean_val_lpf > 31.0 && mean_val_lpf <= 34.2) {
+    } else if (mean_val_lpf > 31.0 && mean_val_lpf <= 34.2) {
         label = "Normal";
-    }
-    else if (mean_val_lpf > 34.2 && mean_val_lpf <= 35.0) {
+    } else if (mean_val_lpf > 34.2 && mean_val_lpf <= 35.0) {
         label = "High";
-    }
-    else if (mean_val_lpf > 35) {
+    } else if (mean_val_lpf > 35) {
         label = "Very high";
     }
     render_text(label, text_color, origin, 3, font64);
@@ -395,8 +388,7 @@ void ThermalCamera::render_animation() {
         timer_is_animating = 0;
         animation_frame_nr++;
         animation_frame_nr = animation_frame_nr >= animation.size() ? 0 : animation_frame_nr;
-    }
-    else {
+    } else {
         timer_is_animating++;
     }
     SDL_Rect animation_rect = {0, output_height, display_width, display_height - output_height};
@@ -405,7 +397,8 @@ void ThermalCamera::render_animation() {
 }
 
 void ThermalCamera::screenshot() {
-    SDL_Surface *sshot = SDL_CreateRGBSurface(0, display_width, display_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+    SDL_Surface *sshot = SDL_CreateRGBSurface(0, display_width, display_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff,
+                                              0xff000000);
     SDL_RenderReadPixels(renderer, nullptr, SDL_PIXELFORMAT_ARGB8888, sshot->pixels, sshot->pitch);
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(5) << frame_no;

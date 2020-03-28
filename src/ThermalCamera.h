@@ -107,7 +107,6 @@ private:
     bool preserve_aspect = true;
     // Estimated environment temperature
     float eTa;
-    float temperature_moving_mean;
     float mean_val;
     float mean_val_lpf;
     std::string message;
