@@ -52,7 +52,7 @@ Note that for the setting `display_rotate=3`, the GL driver must be set to _Lega
 ## Dependencies
 
 ```shell script
-sudo apt install libavutil-dev libavcodec-dev libavformat-dev libsdl2-dev libsdl2-ttf-2.0-0 libsdl2-ttf-dev
+sudo apt install cmake libavutil-dev libavcodec-dev libavformat-dev libsdl2-dev libsdl2-ttf-2.0-0 libsdl2-ttf-dev
 ```
 
 ## Build
@@ -60,7 +60,6 @@ sudo apt install libavutil-dev libavcodec-dev libavformat-dev libsdl2-dev libsdl
 ```shell script
 git clone https://github.com/gilbertfrancois/skin-temperature-scanner.git
 cd skin-temperature-scanner
-./bin/install_dependencies.sh
 mkdir build
 cd build
 cmake ..
