@@ -25,7 +25,7 @@ For this prototype, the following hardware has been used:
 The [MLX90640](https://www.melexis.com/en/product/MLX90640/Far-Infrared-Thermal-Sensor-Array) is a thermal camera
 made by Melexis N.V. It has a I2C interface, which is perfect for the Raspberry Pi and other embedded devices. You can 
 find the C++ API, driver and documentation on their [Github](https://github.com/melexis/mlx90640-library) page.
-The company Pimoroni has made a breakout board 
+The company Pimoroni has made a 
 [breakout board](https://shop.pimoroni.com/products/mlx90640-thermal-camera-breakout?variant=12536948654163) around this
 sensor, for easy integration with a Raspberry Pi.
 
