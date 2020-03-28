@@ -94,7 +94,6 @@ private:
     bool is_running;
     bool is_measuring;
     bool is_measuring_lpf;
-    bool is_animating;
     int display_width;
     int display_height;
     int output_width;
