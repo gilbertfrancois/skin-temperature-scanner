@@ -188,7 +188,6 @@ void ThermalCamera::update() {
     MLX90640_GetFrameData(MLX_I2C_ADDR, frame);
 
     eTa = MLX90640_GetTa(frame, &mlx90640) - 6.0f;
-    eTa = 20.0f;
     MLX90640_CalculateTo(frame, &mlx90640, EMISSIVITY, eTa, mlx90640To);
 
     MLX90640_BadPixelsCorrection((&mlx90640)->brokenPixels, mlx90640To, 1, &mlx90640);
