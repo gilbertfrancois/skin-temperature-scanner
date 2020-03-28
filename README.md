@@ -16,7 +16,9 @@ device to have a quick measure if someone has fever or not.
 For this prototype, the following hardware has been used:
 - Raspberry Pi 2, 3 or 4
 - MLX90640 Thermal Sensor, 32x24 px 
-- Waveshare 4.3" TFT screen (optional)
+- Waveshare 4.3inch HDMI LCD (B), 800x480, IPS
+- 5V 2.4A power adapter (2x)
+- microSD card 8Gb or larger
 
 ## MLX90640 Far infrared Thermal Sensor
 
