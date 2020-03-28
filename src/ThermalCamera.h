@@ -59,8 +59,8 @@ private:
     // === Settings ===
     const float MIN_MEASURE_RANGE = 31.0f;
     const float MAX_MEASURE_RANGE = 40.0f;
-    const float MIN_TEMPERATURE = MIN_MEASURE_RANGE - 10.0f;
-    const float MAX_TEMPERATURE = MAX_MEASURE_RANGE - 3.0f;
+    const float MIN_COLORMAP_RANGE = MIN_MEASURE_RANGE - 10.0f;
+    const float MAX_COLORMAP_RANGE = MAX_MEASURE_RANGE - 3.0f;
     const float MEASURE_AREA_FRACTION = 0.10f;
     const int MEASURE_AREA_THRESHOLD = static_cast<int>(round(SENSOR_W * SENSOR_H * MEASURE_AREA_FRACTION));
     // Emissivity value for human skin
@@ -107,8 +107,8 @@ private:
     bool preserve_aspect = true;
     // Estimated environment temperature
     float eTa;
-    float mean_val;
-    float mean_val_lpf;
+    float mean_temp;
+    float mean_temp_lpf;
     std::string message;
     int animation_frame_nr;
 

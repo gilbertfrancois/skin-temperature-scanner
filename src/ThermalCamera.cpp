@@ -33,8 +33,8 @@ ThermalCamera::ThermalCamera() {
     is_running = true;
     is_measuring = false;
     is_measuring_lpf = is_measuring;
-    mean_val = 0.0f;
-    mean_val_lpf = 0.0f;
+    mean_temp = 0.0f;
+    mean_temp_lpf = 0.0f;
     timer_is_animating = 0;
     animation_frame_nr = 0;
     frame_no = 0;
@@ -192,24 +192,24 @@ void ThermalCamera::update() {
 
     // Scan the sensor and compute the mean skin temperature, assuming that skin temperature is between
     // MIN_TEMPERATURE and MAX_TEMPERATURE.
-    float sum_val = 0.0f;
-    int n_val = 0;
+    float sum_temp = 0.0f;
+    int n_samples = 0;
     for (int y = 0; y < SENSOR_W; y++) {
         for (int x = 0; x < SENSOR_H; x++) {
             // Read the temperature value for this pixel.
             float val = mlx90640To[SENSOR_H * (SENSOR_W - 1 - y) + x];
             // Map the value to a color
-            colormap(y, x, val, MIN_TEMPERATURE, MAX_TEMPERATURE);
+            colormap(y, x, val, MIN_COLORMAP_RANGE, MAX_COLORMAP_RANGE);
             // Sum and count the temperatures within the skin temperature range.
             if (val > MIN_MEASURE_RANGE && val < MAX_MEASURE_RANGE) {
-                sum_val += val;
-                n_val += 1;
+                sum_temp += val;
+                n_samples += 1;
             }
         }
     }
     // Check if there are enough pixels within the temperature measuring range.
     bool is_measuring_prev = is_measuring;
-    is_measuring = n_val > MEASURE_AREA_THRESHOLD;
+    is_measuring = n_samples > MEASURE_AREA_THRESHOLD;
     if (is_measuring_prev != is_measuring) {
         timer_is_measuring = 0;
     } else {
@@ -219,28 +219,29 @@ void ThermalCamera::update() {
         is_measuring_lpf = is_measuring;
     }
     // Compute the mean of the temperatures in the range.
-    if (n_val > 0) {
-        mean_val = sum_val / (float) n_val;
+    if (n_samples > 0) {
+        mean_temp = sum_temp / (float) n_samples;
     } else {
-        mean_val = -1.0f;
+        mean_temp = -1.0f;
     }
-    // Correct the mean value with a moving mean over time.
-    if (mean_val_lpf > 0 && mean_val > MIN_MEASURE_RANGE && mean_val < MAX_MEASURE_RANGE) {
-        if (abs(mean_val_lpf - mean_val) > 0.6) {
-            mean_val_lpf = mean_val;
+    // Smooth the mean temperature over time (moving mean), because the sensor is a bit noisy.
+    if (mean_temp_lpf > 0 && mean_temp > MIN_MEASURE_RANGE && mean_temp < MAX_MEASURE_RANGE) {
+        // Use moving mean only if the difference between current temp and mean_temp is not too large.
+        if (abs(mean_temp_lpf - mean_temp) < 0.6) {
+            mean_temp_lpf = BETA * mean_temp_lpf + (1 - BETA) * mean_temp;
         } else {
-            mean_val_lpf = BETA * mean_val_lpf + (1 - BETA) * mean_val;
+            mean_temp_lpf = mean_temp;
         }
-    } else if (mean_val_lpf < 0 && mean_val > MIN_MEASURE_RANGE && mean_val < MAX_MEASURE_RANGE) {
-        mean_val_lpf = mean_val;
+    } else if (mean_temp_lpf < 0 && mean_temp > MIN_MEASURE_RANGE && mean_temp < MAX_MEASURE_RANGE) {
+        mean_temp_lpf = mean_temp;
     } else {
-        mean_val_lpf = -1.0f;
+        mean_temp_lpf = -1.0f;
     }
     // Format the temperature value to string
     std::stringstream message_ss;
-    if (mean_val > MIN_MEASURE_RANGE && mean_val < MAX_MEASURE_RANGE) {
+    if (mean_temp > MIN_MEASURE_RANGE && mean_temp < MAX_MEASURE_RANGE) {
         message_ss << std::fixed << std::setprecision(1) << std::setw(4);
-        message_ss << mean_val_lpf << "\xB0" << "C" << std::endl;
+        message_ss << mean_temp_lpf << "\xB0" << "C" << std::endl;
         message = message_ss.str();
     } else {
         message = "";
@@ -270,13 +271,13 @@ void ThermalCamera::render_temp_labels() const {
     std::string label = "Skin temperature:";
     render_text(label, text_color, origin, 0, font32);
     origin = {0, 0};
-    if (mean_val_lpf <= 31.0) {
+    if (mean_temp_lpf <= 31.0) {
         label = "Low";
-    } else if (mean_val_lpf > 31.0 && mean_val_lpf <= 34.2) {
+    } else if (mean_temp_lpf > 31.0 && mean_temp_lpf <= 34.2) {
         label = "Normal";
-    } else if (mean_val_lpf > 34.2 && mean_val_lpf <= 35.0) {
+    } else if (mean_temp_lpf > 34.2 && mean_temp_lpf <= 35.0) {
         label = "High";
-    } else if (mean_val_lpf > 35) {
+    } else if (mean_temp_lpf > 35) {
         label = "Very high";
     }
     render_text(label, text_color, origin, 3, font64);
@@ -338,7 +339,7 @@ void ThermalCamera::render_slider() const {
     SDL_Rect rect_slider = {0, ys1, display_width, ys2 - ys1};
     SDL_RenderCopy(renderer, slider, nullptr, &rect_slider);
     // marker
-    auto x_pos = (mean_val_lpf - 31) / (36 - 31);
+    auto x_pos = (mean_temp_lpf - 31) / (36 - 31);
     x_pos = fmin(1.0, x_pos);
     x_pos = fmax(0.0, x_pos);
     int x_marker = static_cast<int>(round(x_pos * (float) display_width));
