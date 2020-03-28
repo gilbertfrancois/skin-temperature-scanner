@@ -76,7 +76,7 @@ sudo apt install \
   libsdl2-ttf-dev
 ```
 
-## Build
+## Build and run
 
 ```shell script
 git clone https://github.com/gilbertfrancois/skin-temperature-scanner.git
