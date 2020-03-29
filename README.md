@@ -66,16 +66,8 @@ Reboot the computer after changing the config.txt file.
 
 ## Dependencies
 
-```shell script
-sudo apt install \
-  cmake \
-  libavutil-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libsdl2-dev \
-  libsdl2-ttf-2.0-0 \
-  libsdl2-ttf-dev
-```
+In the `bin` directory is a script, called `install_dependencies.sh`.
+
 
 ## Download the precompiled binary and run the app
 
@@ -103,6 +95,7 @@ the steps below:
 ```shell script
 git clone https://github.com/gilbertfrancois/skin-temperature-scanner.git
 cd skin-temperature-scanner
+./bin/install_dependencies.sh
 mkdir build
 cd build
 cmake ..
