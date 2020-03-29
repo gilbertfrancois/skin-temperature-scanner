@@ -62,6 +62,7 @@ If you don't want to make these settings by hand, you can also copy the `resourc
 ```shell script
 cp ./resources/boot/config.txt /boot/config.txt
 ```
+Reboot the computer after changing the config.txt file.
 
 ## Dependencies
 
@@ -76,7 +77,28 @@ sudo apt install \
   libsdl2-ttf-dev
 ```
 
-## Build and run
+## Download the precompiled binary and run the app
+
+Download the latest [release](https://github.com/gilbertfrancois/skin-temperature-scanner/releasehttps://github.com/gilbertfrancois/skin-temperature-scanner/releases) 
+and unpack the application in your preferred location:
+```shell script
+tar zxvf ThermalCamera_1.0.1_raspbian_buster_armv7l.tar.gz
+cd ThermalCamera/bin
+./install_dependencies.sh
+```
+Check the settings in `/boot/config.txt` like described above. There is an example file in `resources/boot/config.txt` in 
+this bundle. After changing the config.txt file, reboot the Raspberry Pi.
+
+To run the application:
+```shell script
+cd ThermalCamera/bin
+./ThermalCamera
+```
+
+## Build from source
+
+Instead of downloading the precompiled binary, you can download the source files and compile it yourself by following
+the steps below:
 
 ```shell script
 git clone https://github.com/gilbertfrancois/skin-temperature-scanner.git
