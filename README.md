@@ -128,3 +128,5 @@ After deploying your application, you'll need to [add](https://www.balena.io/doc
 [3] [Raspberry Pi display](https://www.raspberrypi.org/documentation/hardware/display/)
 
 [4] [Waveshare 4.3" display wiki](https://www.waveshare.com/wiki/4.3inch_HDMI_LCD_(B))
+
+[5] [Hackaday.io](https://hackaday.io/project/170595-skin-temperature-scanner)
