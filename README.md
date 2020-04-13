@@ -37,7 +37,8 @@ sensor, for easy integration with a Raspberry Pi.
 | Average human skin temperature | 32-34 degrees Celsius | [2]       |
 
 
-## Setup the Raspberry Pi
+## Deploy on Raspbian
+### Setup the Raspberry Pi
 
 The software is made and tested on Raspbian (Buster). Open `/boot/config.txt` and make the following changes:
 
@@ -64,12 +65,12 @@ cp ./resources/boot/config.txt /boot/config.txt
 ```
 Reboot the computer after changing the config.txt file.
 
-## Dependencies
+### Dependencies
 
 In the `bin` directory is a script, called `install_dependencies.sh`.
 
 
-## Download the precompiled binary and run the app
+### Download the precompiled binary and run the app
 
 Download the latest [release](https://github.com/gilbertfrancois/skin-temperature-scanner/releasehttps://github.com/gilbertfrancois/skin-temperature-scanner/releases) 
 and unpack the application in your preferred location:
@@ -87,7 +88,7 @@ cd ThermalCamera/bin
 ./ThermalCamera
 ```
 
-## Build from source
+### Build from source
 
 Instead of downloading the precompiled binary, you can download the source files and compile it yourself by following
 the steps below:
@@ -102,6 +103,21 @@ cmake ..
 make
 ./ThermalCamera
 ``` 
+
+## Deploy on balenaOS
+
+### What is balenaOS?
+[balenaOS](https://www.balena.io/os/) is a simple, stable Linux operating system tailored for reliably running Docker containers.
+
+### Installation and setup
+Deploying an app to a balena powered device is easy. Take a look at [this]() guide for a detailed step by step on how to deploy this project.
+
+If you are having trouble drop by our [forums](https://forums.balena.io/) and let us know!
+
+### Device configuration
+After deploying your application, you'll need to [add](https://www.balena.io/docs/learn/manage/configuration/) the following: 
+- Device variable: `RESIN_HOST_CONFIG_display_rotate = 3`
+- DT parameter: `"i2c1_baudrate=1000000"`
 
 ## References
 

@@ -1,0 +1,19 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%
+
+WORKDIR /usr/src
+COPY . .
+COPY 3rdparty/piboto/Piboto-Regular.ttf /usr/share/fonts/truetype/piboto/Piboto-Regular.ttf
+
+RUN install_packages \
+  cmake \
+  g++ \
+  libavutil-dev \
+  libavcodec-dev \
+  libavformat-dev \
+  libsdl2-dev \
+  libsdl2-ttf-2.0-0 \
+  libsdl2-ttf-dev \
+  make \
+  xorg
+
+CMD [ "/bin/bash", "/usr/src/bin/balena_start.sh" ]
