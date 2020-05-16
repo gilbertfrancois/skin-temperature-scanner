@@ -271,6 +271,8 @@ void ThermalCamera::render_temp_labels() const {
     std::string label = "Skin temperature:";
     render_text(label, text_color, origin, 0, font32);
     origin = {0, 0};
+    float mean_temp_far = 0.0f;
+    mean_temp_far = (mean_temp_lpf * 9/5) + 32;
     if (mean_temp_lpf <= 31.0) {
         label = "Low";
     } else if (mean_temp_lpf > 31.0 && mean_temp_lpf <= 34.2) {
