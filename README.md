@@ -31,10 +31,11 @@ sensor, for easy integration with a Raspberry Pi.
 
 ## Research
 
-| Setting                        | Value                 | Reference |
-| ------------------------------ | --------------------- | --------- |
-| Emisitivity of human skin      | 0.99                  | [1]       |
-| Average human skin temperature | 32-34 degrees Celsius | [2]       |
+| Setting                               | Value                 | Reference |
+| ------------------------------------- | --------------------- | --------- |
+| Emisitivity of human skin             | 0.99                  | [1]       |
+| Average human facial skin temperature | 32-34 degrees Celsius | [2]       |
+| Average human skin temperature        | 32-34 degrees Celsius | [3]       |
 
 
 ## Deploy on Raspbian
@@ -123,12 +124,14 @@ After deploying your application, you'll need to [add](https://www.balena.io/doc
 
 [1] [Table of emissivity values in the Infrared](https://www.optotherm.com/emiss-table.htm)
 
-[2] [Temperature of a Healthy Human (Skin Temperature)](https://hypertextbook.com/facts/2001/AbantyFarzana.shtml)
+[2] [Measurement of facial skin temperature](https://pubmed.ncbi.nlm.nih.gov/2074296/)
 
-[3] [Infrared thermography in the evaluation of skin temperature, Roope Lasanen](https://core.ac.uk/download/pdf/32431058.pdf?repositoryId=322)
+[3] [Temperature of a Healthy Human (Skin Temperature)](https://hypertextbook.com/facts/2001/AbantyFarzana.shtml)
 
-[4] [Raspberry Pi display](https://www.raspberrypi.org/documentation/hardware/display/)
+[4] [Infrared thermography in the evaluation of skin temperature, Roope Lasanen](https://core.ac.uk/download/pdf/32431058.pdf?repositoryId=322)
 
-[5] [Waveshare 4.3" display wiki](https://www.waveshare.com/wiki/4.3inch_HDMI_LCD_(B))
+[5] [Raspberry Pi display](https://www.raspberrypi.org/documentation/hardware/display/)
 
-[6] [Hackaday.io project page](https://hackaday.io/project/170595-skin-temperature-scanner)
+[6] [Waveshare 4.3" display wiki](https://www.waveshare.com/wiki/4.3inch_HDMI_LCD_(B))
+
+[7] [Hackaday.io project page](https://hackaday.io/project/170595-skin-temperature-scanner)
